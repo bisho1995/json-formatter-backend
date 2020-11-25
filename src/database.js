@@ -4,7 +4,7 @@ const debug = require("debug")("server:database");
 
 const JsonModel = require("./models/JsonModel");
 
-const dbUri = path.join(__dirname, "datastore", "database.db");
+const dbUri = path.join(path.resolve(__dirname), "..", "datastore", "database.db");
 
 const DataStore = function DataStore() {
   this._connecting = null;
