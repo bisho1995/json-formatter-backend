@@ -2,6 +2,7 @@ const express = require("express");
 const debug = require("debug")("server:server");
 const compression = require("compression");
 const router = require("./resources/router");
+const { port } = require("./config");
 
 const Server = function Server() {
   this.app = express();
@@ -28,7 +29,6 @@ Server.prototype._addHealthCheck = function addHealthCheck() {
 };
 
 Server.prototype.listen = function listen() {
-  const port = 8080;
   this.app.listen(port, () => {
     debug("server listening on port %O", port);
   });

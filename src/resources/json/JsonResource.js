@@ -1,9 +1,11 @@
 const express = require("express");
+const os = require("os");
 const debug = require("debug")("server:jsonResource");
 const {
   sequelize: { models },
 } = require("../../database");
 const randomstring = require("randomstring");
+const { port } = require("../../config");
 
 const JsonResource = function JsonResource() {
   const router = express.Router();
@@ -62,12 +64,14 @@ JsonResource.prototype.addJson = async function addJson(req, res) {
       const url = randomstring.generate(8);
       await Json.create({ json, url });
 
-      return res
-        .status(200)
-        .json({ url: `http://localhost:8080/jsons/${url}` });
+      return res.status(200).json({
+        url: `${
+          req.secure ? "http" : "https"
+        }://${os.hostname()}:${port}/jsons/${url}`,
+      });
     } catch (error) {
-      debug("Could not json to DB %O", err);
-      return res.status(500).send();
+      debug("Could not json to DB %O", error);
+      return res.status(500).send("Something went wrong, please try again!");
     }
   } else {
     debug("bad json request");
