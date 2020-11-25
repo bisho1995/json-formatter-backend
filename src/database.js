@@ -44,6 +44,7 @@ DataStore.prototype.init = function init() {
     };
     this._authenticate(authenticateCallback.bind(this));
   }
+  // todo: figure out why bind is used here
   return new Promise(initiateAuth.bind(this));
 };
 
