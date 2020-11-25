@@ -2,6 +2,8 @@ const { Sequelize } = require("sequelize");
 const path = require("path");
 const debug = require("debug")("server:database");
 
+const JsonModel = require("./models/JsonModel");
+
 const dbUri = path.join(__dirname, "datastore", "database.db");
 
 const DataStore = function DataStore() {
@@ -17,27 +19,36 @@ const DataStore = function DataStore() {
 };
 
 DataStore.prototype.init = function init() {
-  return new Promise((resolve) => {
+  function initiateAuth(resolve) {
     const authenticateCallback = function authenticateCallback(err) {
       this._connecting = false;
       if (err) {
         this._connectionError = err;
         this._retriesLeft--;
+
         debug(
-          "failed to connect to database, retried left = %O",
+          "failed to connect to database, retries left = %O",
           this._retriesLeft
         );
-        if (this._retriesLeft > 0) this._authenticate(authenticateCallback);
 
-        // kill app so that it does not start if database connection fails
+        if (this._retriesLeft > 0)
+          this._authenticate(authenticateCallback.bind(this));
+
         debug("error connecting to database %O", err);
+        // kill app so that it does not start if database connection fails
         throw new Error("Cannot connect to database", err);
       } else {
+        this._initializeModels();
         resolve();
       }
     };
-    this._authenticate(authenticateCallback);
-  });
+    this._authenticate(authenticateCallback.bind(this));
+  }
+  return new Promise(initiateAuth.bind(this));
+};
+
+DataStore.prototype._initializeModels = function initializeModels() {
+  JsonModel(this.sequelize).sync({ alter: true });
 };
 
 DataStore.prototype._authenticate = async function authenticate(cb) {
