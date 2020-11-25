@@ -1,6 +1,7 @@
 const express = require("express");
 const debug = require("debug")("server:server");
 const compression = require("compression");
+const router = require("./resources/router");
 
 const Server = function Server() {
   this.app = express();
@@ -11,6 +12,9 @@ Server.prototype._init = function init() {
   this.app.disable("x-powered-by");
   this._addMiddlewares();
   this._addHealthCheck();
+
+  debug("initialized all app routes");
+  this.app.use(router);
 };
 
 Server.prototype._addMiddlewares = function addMiddlewares() {
