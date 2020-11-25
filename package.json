@@ -1,0 +1,21 @@
+{
+  "name": "json-formatter-backend",
+  "version": "1.0.0",
+  "description": "json formatter backend",
+  "main": "lib/index.js",
+  "author": "bisvarup mukherjee",
+  "scripts": {
+    "start": "node lib/index.js",
+    "dev": "DEBUG=server* nodemon lib/index.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "debug": "^4.3.1",
+    "express": "^4.17.1",
+    "sequelize": "^6.3.5",
+    "sqlite3": "^5.0.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.6"
+  }
+}
