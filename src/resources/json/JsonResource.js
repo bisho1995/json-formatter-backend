@@ -5,7 +5,7 @@ const {
   sequelize: { models },
 } = require("../../database");
 const randomstring = require("randomstring");
-const { port } = require("../../config");
+const { port, host } = require("../../config");
 
 const JsonResource = function JsonResource() {
   const router = express.Router();
@@ -69,9 +69,7 @@ JsonResource.prototype.addJson = async function addJson(req, res) {
       await Json.create({ json, url });
 
       return res.status(200).json({
-        url: `${
-          req.secure ? "http" : "https"
-        }://${os.hostname()}:${port}/jsons/${url}`,
+        url: `${req.secure ? "https" : "http"}://${host}:${port}/jsons/${url}`,
       });
     } catch (error) {
       debug("Could not json to DB %O", error);
