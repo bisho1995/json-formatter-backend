@@ -4,7 +4,12 @@ const debug = require("debug")("server:database");
 
 const JsonModel = require("./models/JsonModel");
 
-const dbUri = path.join(path.resolve(__dirname), "..", "datastore", "database.db");
+const dbUri = path.join(
+  path.resolve(__dirname),
+  "..",
+  "datastore",
+  "database.db"
+);
 
 const DataStore = function DataStore() {
   this._connecting = null;
@@ -49,7 +54,7 @@ DataStore.prototype.init = function init() {
 };
 
 DataStore.prototype._initializeModels = function initializeModels() {
-  JsonModel(this.sequelize).sync({ alter: true });
+  JsonModel(this.sequelize).sync();
 };
 
 DataStore.prototype._authenticate = async function authenticate(cb) {

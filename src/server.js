@@ -2,7 +2,9 @@ const express = require("express");
 const debug = require("debug")("server:server");
 const compression = require("compression");
 const router = require("./resources/router");
+const cors = require("cors");
 const { port } = require("./config");
+var bodyParser = require("body-parser");
 
 const Server = function Server() {
   this.app = express();
@@ -19,7 +21,12 @@ Server.prototype._init = function init() {
 };
 
 Server.prototype._addMiddlewares = function addMiddlewares() {
-  this.app.use([compression(), express.urlencoded({ extended: false })]);
+  this.app.use([
+    compression(),
+    bodyParser.urlencoded({ extended: false }),
+    bodyParser.json(),
+    cors(),
+  ]);
 };
 
 Server.prototype._addHealthCheck = function addHealthCheck() {

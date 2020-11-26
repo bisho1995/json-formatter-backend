@@ -47,14 +47,18 @@ JsonResource.prototype.addJson = async function addJson(req, res) {
   let { json } = req.body;
   let invalidJson = false;
 
-  if (!json) invalidJson = true;
-  else if (typeof json === "string") {
+  if (!json) {
+    console.log("json is not present %O", req.body);
+    invalidJson = true;
+  } else if (typeof json === "string") {
     try {
       json = JSON.parse(json);
     } catch (error) {
+      debug("error parsing json");
       invalidJson = true;
     }
-  } else if (typeof json !== Object) {
+  } else if (typeof json !== "object") {
+    debug("json is not an object");
     invalidJson = true;
   }
 
@@ -74,7 +78,7 @@ JsonResource.prototype.addJson = async function addJson(req, res) {
       return res.status(500).send("Something went wrong, please try again!");
     }
   } else {
-    debug("bad json request");
+    debug("bad json request, json type = %O and json = %O", typeof json, json);
     res.status(400).send();
   }
 };
